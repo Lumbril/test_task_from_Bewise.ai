@@ -80,3 +80,34 @@ class Solution:
 
     def get_introduced_himself(self):
         return self.manager.loc[self.manager['is_introduced_himself'] == 1][['dlg_id', 'line_n', 'role', 'text']]
+
+    def get_names_managers(self):
+        from nltk import word_tokenize
+
+        data = self.manager.loc[self.manager['is_introduced_himself'] == 1]
+        data_text = data['processed_text']
+        names = set()
+
+        for text in data_text:
+            tokens = word_tokenize(text)
+
+            while len(tokens) < 3:
+                tokens.append('')
+
+            trigram_list = list(nltk.ngrams(tokens, 3))
+
+            for i in range(len(trigram_list)):
+                trigram = trigram_list[i]
+
+                if re.match(r'(\W|^)меня\sзовут(\W|$)', ' '.join(trigram)):
+                    names.add(trigram[2])
+                elif re.match(r'(\W|^)меня\s[а-я]{1,}\sзовут(\W|$)', ' '.join(trigram)):
+                    names.add(trigram[1])
+                elif re.match(r'(\W|^)(здравствуйте|да|добрыйдень|приветствую|доброеутро|добрыйвечер)\sс\sвами(\W|$)',
+                              ' '.join(trigram)):
+                    names.add(trigram_list[i + 1][0])
+                elif re.match(r'(\W|^)(здравствуйте|да|добрыйдень|приветствую|доброеутро|добрыйвечер)\sэто(\W|$)',
+                              ' '.join(trigram)):
+                    names.add(trigram[2])
+
+        return names
