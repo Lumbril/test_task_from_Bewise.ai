@@ -1,12 +1,15 @@
 from solution import Solution
 
-
 solution = Solution()
 
 menu = 'Номера действий:\n' \
        '1 - Извлечь реплики с приветствием – где менеджер поздоровался\n' \
        '2 - Извлечь реплики, где менеджер представил себя\n' \
        '3 - Извлечь название менеджера\n' \
+       '4 - None\n' \
+       '5 - Извлечь реплики, где менеджер попрощался\n' \
+       '6 - Проверить требование к менеджеру: «В каждом диалоге обязательно необходимо поздороваться и попрощаться с ' \
+       'клиентом»\n' \
        '0 - Завершить работу\n' \
        'Введите номер действия: '
 
@@ -18,7 +21,7 @@ while True:
 
     x = int(x)
 
-    if x == 0:
+    if x <= 0 or x > 6:
         break
     elif x == 1:
         data = solution.get_greeting_phrases()
@@ -29,4 +32,11 @@ while True:
     elif x == 3:
         names_managers = solution.get_names_managers()
         print(names_managers)
-
+    elif x == 4:
+        pass
+    elif x == 5:
+        data = solution.get_parting_phrases()
+        print(data)
+    elif x == 6:
+        data = solution.get_criterion_for_dialog()
+        print(data)
