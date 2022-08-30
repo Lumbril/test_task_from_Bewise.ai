@@ -133,3 +133,4 @@ dmypy.json
 .idea/inspectionProfiles/Project_Default.xml
 .idea/misc.xml
 .idea/test_task_from_Bewise.ai.iml
+test_data.csv
