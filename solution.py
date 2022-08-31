@@ -134,6 +134,45 @@ class Solution:
 
         return names
 
+    def get_names_companies(self):
+        from nltk import word_tokenize
+
+        data = self.manager
+        data_text = data[['dlg_id', 'processed_text']]
+
+        update_data_text = pd.DataFrame(columns=['dlg_id', 'processed_text'])
+
+        for i in range(len(data_text)):
+            tokens = word_tokenize(data.iloc[i]['processed_text'])
+
+            while len(tokens) < 3:
+                tokens.append('')
+
+            trigram_list = list(nltk.ngrams(tokens, 3))
+
+            check = 0
+
+            for gram in trigram_list:
+                for word in gram:
+                    if len(word) < 4:
+                        check = 1
+                        break
+
+                if check == 1:
+                    break
+
+                for label in Dictionary.company_label:
+                    if label[0] in gram[label[1]]:
+                        update_data_text.loc[len(update_data_text), update_data_text.columns] = data.iloc[i]['dlg_id'],\
+                                                                                                ' '.join(gram)
+                        check = 1
+                        break
+
+                if check == 1:
+                    break
+
+        return update_data_text
+
     def get_parting_phrases(self):
         return self.manager.loc[self.manager['is_parting'] == 1][['dlg_id', 'line_n', 'role', 'text']]
 
